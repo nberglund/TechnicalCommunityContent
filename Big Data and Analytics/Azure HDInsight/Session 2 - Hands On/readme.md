@@ -53,7 +53,7 @@ In this exercise, you will create an HDInsight cluster running [Apache Spark](ht
 
 1. Open the [Azure Portal](https://portal.azure.com) in your browser. If you are asked to log in, do so using your Microsoft account.
 
-1. Click **+ New** in the upper-left corner of the portal. Then click **Intelligence + analytics** followed by **HDInsight**.
+1. Click **+ New** in the upper-left corner of the portal. Then click **Data + Analytics**, followed by **HDInsight**.
 
     ![Creating an HDInsight cluster](Images/new-hdinsight.png)
 
@@ -63,7 +63,7 @@ In this exercise, you will create an HDInsight cluster running [Apache Spark](ht
 
 	> In case someone else in the lab selects the same cluster name, make it as unique as possible by including birth dates, initials, and anything else you care to add. The name you entered may be unique right now, but it might NOT be unique a few minutes into the deployment.
 
-	Enter "Azure4Research!" (without quotation marks) for **Cluster login password**. Select **Create new** under **Resource group** and enter the resource-group name "SparkLabResourceGroup" (once more, without quotation marks). Select the **Location** nearest you, and then click **Cluster type** to open a "Cluster configuration" blade.
+	Enter "Azure4Research!" (without quotation marks) for **Cluster login password**. Select **Create new** under **Resource group** and enter the resource-group name "SparkLabResourceGroup." Select the **Location** nearest you, and then click **Cluster type** to open a "Cluster configuration" blade.
 
     ![Entering basic cluster settings](Images/spark-basic.png)
 
@@ -75,7 +75,7 @@ In this exercise, you will create an HDInsight cluster running [Apache Spark](ht
 
     _Entering cluster-configuration settings_
 
-1. Make sure **Primary storage type** is set to **Azure Storage** and **Selection method** is set to **My subscriptions**. Then enter a name for a new storage account in the **Create a new Storage account** box, once more making the name as unique as possible by including birth dates or other information. (If your subscription already contains one or more storage accounts, you will first have to click **Create new** to display the **Create a new Storage account** box.) Type "sparklab" into the **Default container** box, and then click **Next**.
+1. Make sure **Primary storage type** is set to **Azure Storage** and **Selection method** is set to **My subscriptions**. Then enter a unique storage account name, once more making it as unique as possible by including birth dates or other information. (If the portal selects an existing storage account by default, click **Create new** to create a new storage account.) Type "sparklab" into the **Default container** box, and then click **Next**.
 
 	> These settings apply to the storage account that is provisioned along with the cluster. The storage account contains the cluster's file system and the software installed inside.
 
@@ -97,9 +97,7 @@ In this exercise, you will create an HDInsight cluster running [Apache Spark](ht
 
     _Opening the resource group_
 
-1. Deploying an HDInsight cluster can take 15 minutes or more. Wait until "Deploying" changes to "Succeeded," indicating that the cluster has been deployed.
-
-	> Refresh the page in the browser periodically to update the deployment status. Clicking the **Refresh** button in the resource-group blade refreshes the list of resources in the resource group, but does not reliably update the deployment status.
+1. Deploying an HDInsight cluster can take 15 minutes or more. Wait until "Deploying" changes to "Succeeded," indicating that the cluster has been deployed. You can click the **Refresh** button at the top of the blade to refresh the deployment status.
 
     ![Viewing the deployment status](Images/deployment-status.png)
 

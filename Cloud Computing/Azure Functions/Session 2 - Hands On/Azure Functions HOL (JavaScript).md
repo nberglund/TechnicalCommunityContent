@@ -70,11 +70,9 @@ The first step in writing an Azure Function is to create an Azure Function App. 
 
     _Opening the resource group_
 
-1. Wait until "Deploying" changes to "Succeeded," indicating that the Function App has been deployed. Then click the storage account that was created for the Function App.
+1. Periodically click the **Refresh** button at the top of the blade until "Deploying" changes to "Succeeded," indicating that the Function App has been deployed. Then click the storage account that was created for the Function App.
 
-	> Refresh the page in the browser every now and then to update the deployment status. Clicking the **Refresh** button in the resource-group blade refreshes the list of resources in the resource group, but does not reliably update the deployment status.
-
-    ![Opening the storage account](Images/open-storage-account-after-deployment.png)
+    ![Opening the storage account](Images/open-storage-account.png)
 
     _Opening the storage account_
 
@@ -84,7 +82,7 @@ The first step in writing an Azure Function is to create an Azure Function App. 
 
     _Opening blob storage_
 
-1. Click **+ Container**. Type "uploaded" into the **Name** box and set **Access type** to **Private**. Then click the **OK** button to create a new container.
+1. Click **+ Container**. Type "uploaded" into the **Name** box and set **Public access level** to **Private**. Then click the **OK** button to create a new container.
 
     ![Adding a container](Images/add-container.png)
 
@@ -111,9 +109,9 @@ Once you have created an Azure Function App, you can add Azure Functions to it. 
 
     _Opening the Function App_
 
-1. Click the **+** sign to the right of **Functions**. Then click **Custom function**.
+1. Click the **+** sign to the right of **Functions**. Set the language to **JavaScript**, and then click **Custom function**.
 
-    ![Adding a function](Images/add-function.png)
+    ![Adding a function](Images/js-add-function.png)
 
     _Adding a function_
 
@@ -138,12 +136,12 @@ Once you have created an Azure Function App, you can add Azure Functions to it. 
 	module.exports = function (context, myBlob) {
 
 	context.log("Analyzing uploaded image '" + context.bindingData.name + "' for adult content...");
-	var options = getAnalysisOptions(myBlob, process.env.SubscriptionKey);
+	var options = getAnalysisOptions(myBlob, process.env.SubscriptionKey, process.env.VisionEndpoint);
 	analyzeAndProcessImage(context, options);
 
-	function getAnalysisOptions(image, subscriptionKey) {
+	function getAnalysisOptions(image, subscriptionKey, endpoint) {
 	    return  {
-	        uri: "https://westus.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Adult",
+	        uri: endpoint + "/analyze?visualFeatures=Adult",
 	        method: 'POST',
 	        body: image,
 	        headers: {
@@ -264,13 +262,37 @@ An Azure Function written in JavaScript has been created and configured and the 
 <a name="Exercise3"></a>
 ## Exercise 3: Add a subscription key to application settings ##
 
-The Azure Function you created in [Exercise 2](#Exercise2) loads a subscription key for the Microsoft Cognitive Services Computer Vision API from application settings. This key is required in order for your code to call the Computer Vision API, and is transmitted in an HTTP header in each call. In this exercise, you will add an application setting containing the subscription key to the Function App.
+The Azure Function you created in [Exercise 2](#Exercise2) loads a subscription key for the Microsoft Cognitive Services Computer Vision API from application settings. This key is required in order for your code to call the Computer Vision API, and is transmitted in an HTTP header in each call. It also loads the base URL for the Computer Vision API (which varies by data center) from application settings. In this exercise, you will subscribe to the Computer Vision API, and then add an access key and a base URL to application settings.
 
-1. Open a new browser window and navigate to https://www.microsoft.com/cognitive-services/en-us/subscriptions. If you haven't signed up for the Computer Vision API, do so now. (Signing up is free.) Then click **Copy** under **Key 1** in your Computer Vision subscription to copy the subscription key to the clipboard.
+1. In the Azure Portal, click **+ New**, followed by **AI + Cognitive Services** and **Computer Vision API**.
 
-    ![Copying the subscription key to the clipboard](Images/computer-vision-key.png)
+    ![Creating a new Computer Vision API subscription](Images/new-vision-api.png)
 
-    _Copying the subscription key to the clipboard_
+    _Creating a new Computer Vision API subscription_
+
+1. Enter "VisionAPI" into the **Name** box and select **F0** as the **Pricing tier**. Under **Resource Group**, select **Use existing** and select the "FunctionsLabResourceGroup" resource group that you created for the Function App in Exercise 1. Check the **I confirm** box, and then click **Create**.
+
+    ![Subcribing to the Computer Vision API](Images/create-vision-api.png)
+
+    _Subcribing to the Computer Vision API_
+
+1. Return to the blade for "FunctionsLabResourceGroup" and click the Computer Vision API subscription that you just created.
+
+    ![Opening the Computer Vision API subscription](Images/open-vision-api.png)
+
+    _Opening the Computer Vision API subscription_
+
+1. Copy the URL under **Endpoint** into your favorite text editor so you can easily retrieve it in a moment. Then click **Show access keys**.
+
+    ![Viewing the access keys](Images/show-access-keys.png)
+
+    _Viewing the access keys_
+
+1. Click the **Copy** button to the right of **KEY 1** to copy the access key to the clipboard.
+
+    ![Copying the access key](Images/copy-access-key.png)
+
+    _Copying the access key_
 
 1. Return to the Function App in the Azure Portal and click the function name in the ribbon on the left. Then click **Platform features**, followed by **Application settings**. 
 
@@ -278,11 +300,11 @@ The Azure Function you created in [Exercise 2](#Exercise2) loads a subscription 
 
     _Viewing application settings_
 
-1. Scroll down to the "App settings" section. Add a new app setting named "SubscriptionKey" (without quotation marks), and paste the subscription key that is on the clipboard into the **Value** box. Then click **Save** at the top of the blade.
+1. Scroll down to the "App settings" section. Add a new app setting named "SubscriptionKey" (without quotation marks), and paste the subscription key that is on the clipboard into the **Value** box. Then add a setting named "VisionEndpoint" and set its value to the endpoint URL you saved in Step 4. Finish up by clicking **Save** at the top of the blade.
 
-    ![Adding a subscription key](Images/add-key.png)
+    ![Adding application settings](Images/add-keys.png)
 
-    _Adding a subscription key_
+    _Adding application settings_
 
 The work of writing and configuring the Azure Function is complete. Now comes the fun part: testing it out.
 
@@ -293,7 +315,7 @@ Your function is configured to listen for changes to the blob container named "u
 
 1. In the Azure Portal, go to the resource group created for your Function App. Then click the storage account that was created for it.
 
-    ![Opening the storage account](Images/open-storage-account.png)
+    ![Opening the storage account](Images/open-storage-account-2.png)
 
     _Opening the storage account_
 
